@@ -1,0 +1,23 @@
+services:
+  php:
+    container_name: larabank-php
+    build:
+      context: ./docker/php/
+    volumes:
+      - ./:/app/
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.larabank-http.rule=Host(`larabank.docker.local`)"
+      - "traefik.http.routers.larabank-http.entrypoints=websecure"
+      - "traefik.http.routers.larabank-http.tls=true"
+  node:
+    container_name: larabank-node
+    image: node:16
+    volumes:
+      - ./:/app/
+    working_dir: /app/
+    command: npm run dev
+networks:
+  default:
+    name: ffh-network
+    external: true
